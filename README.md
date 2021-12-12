@@ -1,30 +1,31 @@
-# [Autolinks](https://github.com/prakhargurunani/Autolinks)
-![Autolinks-Logo](logos/logo_transparent.png)
-A GitHub app for web scraping
+## Inspiration
 
-## About
-_Autolink lets you instantly share web links related to a particular topic by just using keywords._
+Large projects are often difficult to manage, with lots of issues and PRs to review. Some issues are often user specific, which don't require the attention of project managers and can be resolved by doing some online research or referring some websites/blogs. The bot takes this responsibility from the project managers.
 
-## Installation
-* Go to the homepage of the app - https://github.com/apps/autolinks
-* Click on the Configure button
-* Add repositories or organizations to activate Autolinks
+## What it does
 
-## Usage
-_Autolinks_ currently works only for GitHub Issues. Extending it to PRs will be planned in future or if any developer is interested, he may work on this feature.
+The bot shares links of various websites, when triggered with a certain query with the required keywords. It also requires an integer, the number of results to return.
 
-`@Autolinks <search_query> <number_of_results>`
+## How to use it
 
-Here,
-* `<search_query>`(`str`): The term you want to be googled. (Cannot be empty)
-* `<number_of_results>`(`int`): The number of results you want for a query. (Min:1, Max:9)
+An example query like `!help Cloud Native Hackathon 5` will trigger the bot. The bot checks if the issue comment starts with `!help` and ends with an `int`, the number of results.
 
-## Example
-`@Autolinks Win 7 DLL file error 5` will return first `5` search results related to the topic `Win 7 DLL file error`.
+## How we built it
 
-![Example](Usage-Tutorial.gif)
+After installation, the bot configures webhooks on the repositories selected by the user. When the user comments a certain query, like the example above, it will trigger the webhook, which sends the request to a NGROK endpoint (for testing purposes), where a flask server is running. The request is processed and formatted. Google API is used to fetch the results, specifing the query (here `Cloud Native Hackathon`), along with an integer (`5` here). The links are sent in a POST request to the GitHub API, authenticated via the bot, which the shares the links in a issue comment.
 
-You can also test it live [here](https://github.com/FirePing32/Autolinks/issues/2#issue-comment-box).
+## Challenges we ran into
 
-## Private Repositories
-This app will only work for publicly hosted repositories. So if you are looking to deploy a fork or **use the app for private repositories**, [here are the instructions](https://github.com/prakhargurunani/Autolinks/wiki/Instructions-to-deploy-a-fork).
+Google API can process and send any number of results. So, if the user does not specify the number of results to return, then the API will keep on scraping the results, and will not stop. So we have specified a strict format to use the bot, with max number of results as 9.
+
+## Accomplishments that we're proud of
+
+The project managers had to manually search the web to find relevant websites which might help in fixing the issue. The bot will save quite some time in doing this for them.
+
+## What we learned
+
+We learned how the use the GitHub API, how the webhooks work, and learned how to manage servers.
+
+## What's next for Kronos
+
+We are yet to add site specific search in Kronos. This will help to scrap several web pages from the same website. The limit on the max number of results will be changed in the near future, with an optimised solution. We are also planning to implement Open AI into the bot, which will be useful for sharing frequently used code snippets in issues.
