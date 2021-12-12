@@ -19,14 +19,6 @@ message_2 = "Oops ! An error occured while processing data. \
 Please follow the guidelines about how to use this bot \
 --> https://github.com/FirePing32/Autolinks"
 
-'''
-def get_title(url: str):
-    """ Get the Title of the web page and generates markdown formated link"""
-    html_source = requests.get(url).text
-    title = re.findall('<title>(.*?)</title>', html_source)[0].strip()
-    return f"[{title}]({url})"
-'''
-
 @app.route("/github/callback", methods=["POST"])
 def issue():
 
@@ -40,18 +32,6 @@ def issue():
     if comment.split()[0] == '!help' and data["action"] == "created":
 
         try:
-            """
-            text = urllib.parse.quote_plus(comment)
-            url = 'https://google.com/search?q=' + text
-            response = requests.get(url)
-            soup = BeautifulSoup(response.text, 'html.parser')
-
-            alllinks = []
-            for link in soup.find_all('a'):
-                alllinks.append(link.get('href'))
-            links = alllinks
-            print(links)
-            """
 
             num = int(comment[-1])
             query = comment[6:-2]
