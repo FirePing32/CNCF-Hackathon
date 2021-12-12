@@ -3,7 +3,10 @@ from flask import Flask, jsonify, request
 from github import Github
 from googlesearch import search
 from os.path import join, dirname
-from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv
+except ImportError:
+    print("No module named 'google' found")
 from os import environ as env
 
 dotenv_path = join(dirname(__file__), '.env')
@@ -34,7 +37,7 @@ def issue():
     comment = data["comment"]["body"]
     print(comment)
 
-    if comment.split()[0] == '!help':
+    if comment.split()[0] == '!help' and data["action"] == "created":
 
         try:
             """
@@ -66,7 +69,7 @@ def issue():
             comment_body = message_1 + query + "** - \n\n"
             for site_url in links:
                 comment_body = comment_body + "- " + site_url + "\n"
-            comment_body = comment_body + "\n" + "Triggered by @" + user_name
+            comment_body = comment_body
             print("\n" + comment_body)
 
             g.get_user(user_name).get_repo(repo).get_issue(
